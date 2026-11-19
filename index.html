@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E1C19">
+<title>How to treat your AI’s amnesia</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap">
+<style>
+
+* { margin: 0 }
+@page { size: 1920px 1080px; margin: 0 }
+body { font: 32px/1.2 sans-serif; margin: 0 }
+body > section { width: 1920px !important; height: 1080px !important; overflow: hidden !important; box-sizing: border-box !important; position: relative; isolation: isolate;  }
+aside { display: none !important }
+x-shape, x-icon { display: block }
+x-shape[kind="ellipse"] { border-radius: 50% }
+
+body { font-family: 'DM Sans', Arial, sans-serif; color: #1E1C19; }
+section { padding: 128px; display: flex; flex-direction: column; justify-content: center; gap: 64px; background: #F3EEE5; color: #1E1C19; }
+section.alt { background: #E8E0D2; }
+section.clay { background: #B8532E; color: #F6EFE6; }
+section.bottom { justify-content: flex-end; }
+section.top { justify-content: flex-start; gap: 88px; }
+.serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
+h1.serif { font-size: 144px; line-height: 1.0; letter-spacing: -2px; max-width: 1400px; }
+h2.serif { font-size: 96px; line-height: 1.05; letter-spacing: -1px; max-width: 1500px; }
+.clayc { color: #B8532E; }
+.soft { color: #5C564D; }
+.bubbles { display: flex; flex-direction: column; gap: 40px; align-items: flex-start; }
+.bubble { font-size: 56px; line-height: 1.25; padding: 36px 56px; border-radius: 56px; background: #FBF8F2; border: 2px solid #DDD3C3; color: #1E1C19; max-width: 1300px; }
+.bubble.me { background: #1E1C19; color: #F3EEE5; border: 2px solid #1E1C19; align-self: flex-end; }
+.bubble.warn { display: flex; align-items: center; gap: 32px; }
+.bubble.warn x-icon { color: #B8532E; width: 56px; height: 56px; }
+.indent1 { margin-left: 120px; }
+.indent2 { margin-left: 240px; }
+.dots { display: flex; gap: 20px; padding: 44px 56px; border-radius: 56px; background: #FBF8F2; border: 2px solid #DDD3C3; align-self: flex-start; }
+.dots x-shape { width: 28px; height: 28px; background: #B8532E; animation: blink 1200ms ease-in-out 4 both; animation-delay: calc(var(--i, 0) * 200ms); }
+.diagram { position: relative; width: 1664px; height: 560px; }
+.chip { position: absolute; left: 0; width: 420px; height: 104px; box-sizing: border-box; padding: 28px 40px; border-radius: 52px; background: #FBF8F2; border: 2px solid #DDD3C3; font-size: 40px; line-height: 1.2; }
+.chip.you { left: 1300px; width: 364px; background: #1E1C19; color: #F3EEE5; border: 2px solid #1E1C19; }
+.card { position: absolute; left: 680px; top: 80px; width: 360px; height: 400px; box-sizing: border-box; padding: 44px; border-radius: 28px; background: #FBF8F2; border: 3px solid #1E1C19; display: flex; flex-direction: column; gap: 28px; }
+.card p { font-size: 40px; font-weight: 600; line-height: 1.2; }
+.bar { height: 14px; border-radius: 7px; background: #DDD3C3; }
+x-connector { color: #8A8175; border-width: 3px; }
+.stats { display: flex; gap: 180px; align-items: flex-start; }
+.stat { display: flex; flex-direction: column; gap: 16px; }
+.num { font-family: 'Instrument Serif', Georgia, serif; font-size: 240px; line-height: 1.0; letter-spacing: -4px; }
+.lbl { font-size: 56px; line-height: 1.2; color: #5C564D; max-width: 700px; }
+.url { font-size: 40px; color: #5C564D; }
+@keyframes pop { from { opacity: 0; transform: translateY(24px) scale(0.96); } to { opacity: 1; transform: translateY(0px) scale(1); } }
+@keyframes rise { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0px); } }
+@keyframes blink { 0% { opacity: 0.25; } 50% { opacity: 1; } 100% { opacity: 0.25; } }
+.pop { animation: pop 450ms ease-out both; animation-delay: calc(var(--i, 0) * 260ms); }
+.rise { animation: rise 600ms ease-out both; animation-delay: calc(var(--i, 0) * 160ms); }
+.split { display: flex; align-items: center; justify-content: space-between; gap: 96px; }
+.split h2 { flex: 1; }
+.stack { flex: 1; display: flex; flex-direction: column; gap: 64px; }
+.qrcol { display: flex; flex-direction: column; align-items: center; gap: 32px; }
+.qr { width: 440px; height: 440px; border: 2px solid #DDD3C3; border-radius: 26px; }
+.tree { display: flex; flex-direction: column; gap: 14px; border-left: 3px solid #DDD3C3; padding-left: 48px; }
+.tsub { display: flex; flex-direction: column; gap: 14px; margin-left: 8px; border-left: 3px solid #DDD3C3; padding-left: 48px; }
+.trow { display: flex; align-items: baseline; gap: 28px; }
+.tname { font-size: 44px; line-height: 1.2; font-weight: 500; }
+.tnum { font-size: 44px; line-height: 1.2; color: #B8532E; font-variant-numeric: tabular-nums; }
+.chats { display: flex; gap: 48px; align-items: stretch; }
+.win { flex: 1; height: 600px; display: flex; flex-direction: column; background: #FBF8F2; border: 2px solid #DDD3C3; border-radius: 32px; overflow: hidden; }
+.chrome { display: flex; gap: 14px; padding: 28px 32px; border-bottom: 2px solid #E8E0D2; }
+.chrome x-shape { width: 20px; height: 20px; background: #DDD3C3; }
+.winbody { flex: 1; padding: 40px 32px; display: flex; flex-direction: column; align-items: flex-start; }
+.wbubble { font-size: 56px; line-height: 1.2; padding: 32px 40px; border-radius: 44px; background: #EFE7DA; color: #1E1C19; }
+.inputbar { height: 64px; margin: 0 32px 32px; border-radius: 32px; border: 2px solid #E8E0D2; }
+.cover-split { align-items: flex-end; }
+.speaker { width: 560px; flex-shrink: 0; box-sizing: border-box; padding: 56px 48px; display: flex; flex-direction: column; align-items: center; gap: 20px; background: #FBF8F2; border: 2px solid #DDD3C3; border-radius: 40px; }
+.avatar { width: 200px; height: 200px; box-sizing: border-box; border-radius: 100px; background: #F1E0D6; border: 3px solid #B8532E; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+.initial { font-family: 'Instrument Serif', Georgia, serif; font-size: 144px; line-height: 1; color: #B8532E; }
+.sname { font-size: 56px; line-height: 1.15; font-weight: 600; text-align: center; }
+.srole { font-size: 40px; line-height: 1.3; color: #5C564D; text-align: center; }
+.cover-split h1 { flex: 1; }
+.pwrap { position: absolute; width: 780px; }
+.pwin { box-sizing: border-box; width: 780px; background: #FBF8F2; border: 2px solid #DDD3C3; border-radius: 32px; box-shadow: 0 24px 48px rgba(30, 28, 25, 0.14); overflow: hidden; }
+.r1 { transform: rotate(-4deg); }
+.r2 { transform: rotate(3deg); }
+.r3 { transform: rotate(-2deg); }
+.pbody { padding: 36px 40px 44px; display: flex; flex-direction: column; align-items: flex-start; }
+
+*, *::before, *::after { animation: none !important; transition: none !important }
+
+html, body { height: 100%; background: #1E1C19; overflow: hidden; }
+#stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+#deck { width: 1920px; height: 1080px; position: relative; transform-origin: center center; flex: none; }
+#deck > section { position: absolute !important; left: 0; top: 0; width: 1920px !important; height: 1080px !important; box-sizing: border-box !important; overflow: hidden !important; isolation: isolate; display: none !important; }
+#deck > section.on { display: flex !important; }
+#ui { position: fixed; left: 0; right: 0; bottom: max(16px, env(safe-area-inset-bottom)); display: flex; justify-content: center; gap: 12px; pointer-events: none; font-family: 'DM Sans', Arial, sans-serif; }
+.pill { pointer-events: auto; font-size: 15px; padding: 8px 16px; border-radius: 999px; background: rgba(30,28,25,.82); color: #F3EEE5; border: 1px solid rgba(243,238,229,.18); }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 4px; background: #8A8175; margin-right: 8px; vertical-align: 1px; }
+.live .dot { background: #E07A52; }
+button.pill { cursor: pointer; }
+#rotate { display: none; position: fixed; top: max(14px, env(safe-area-inset-top)); left: 0; right: 0; text-align: center; font: 14px 'DM Sans', Arial, sans-serif; color: #BDB4A6; }
+@media (orientation: portrait) { #rotate { display: block; } }
+/* presenter */
+#remote { display: none; position: fixed; inset: 0; background: #1E1C19; color: #F3EEE5; font-family: 'DM Sans', Arial, sans-serif; flex-direction: column; padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom)); box-sizing: border-box; gap: 16px; }
+body.presenter #remote { display: flex; }
+body.presenter #ui, body.presenter #rotate { display: none !important; }
+#preview { flex: none; width: 100%; aspect-ratio: 16 / 9; position: relative; overflow: hidden; border-radius: 14px; background: #F3EEE5; }
+#count { font-size: 18px; color: #BDB4A6; text-align: center; }
+#status { font-size: 14px; color: #BDB4A6; text-align: center; min-height: 18px; }
+.btns { flex: 1; display: grid; grid-template-columns: 1fr 2fr; gap: 14px; min-height: 160px; }
+.btns button { border: 0; border-radius: 22px; font: 600 26px 'DM Sans', Arial, sans-serif; color: #1E1C19; }
+#prev { background: #8A8175; }
+#next { background: #E07A52; }
+</style>
+</head>
+<body>
+<div id="stage"><div id="deck">
+<section id="cover" class="bottom" data-transition="fade">
+<h1 class="serif rise" style="--i:3">How to treat your AI’s <i class="clayc">amnesia</i></h1>
+
+</section>
+<section id="quote" class="alt" data-transition="fade">
+<div class="pwrap pop" style="left:140px; top:50px; --i:0"><div class="pwin r1"><div class="chrome"><x-shape kind="ellipse"></x-shape><x-shape kind="ellipse"></x-shape><x-shape kind="ellipse"></x-shape></div><div class="pbody"><p class="wbubble">You’re absolutely right! I forgot.</p></div></div></div>
+<div class="pwrap pop" style="left:560px; top:370px; --i:3"><div class="pwin r2"><div class="chrome"><x-shape kind="ellipse"></x-shape><x-shape kind="ellipse"></x-shape><x-shape kind="ellipse"></x-shape></div><div class="pbody"><p class="wbubble">How’s your thesis?</p></div></div></div>
+<div class="pwrap pop" style="left:980px; top:640px; --i:6"><div class="pwin r3"><div class="chrome"><x-shape kind="ellipse"></x-shape><x-shape kind="ellipse"></x-shape><x-shape kind="ellipse"></x-shape></div><div class="pbody"><p class="wbubble">What’s Limaze?</p></div></div></div>
+
+</section>
+<section id="blackbox" class="clay" data-transition="fade">
+<h2 class="serif rise">Built-in memory is a <i>black box.</i></h2>
+
+</section>
+<section id="own" class="" data-transition="fade">
+<div class="split">
+<h2 class="serif rise">So I built <i class="clayc">my own,</i> from Karpathy’s LLM Wiki.</h2>
+<div class="qrcol pop" style="--i:3"><div class="qr"><svg aria-label="QR code: Andrej Karpathy’s LLM Wiki gist" width="440" height="440" viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg"><rect width="440" height="440" rx="24" fill="#FBF8F2"/><path fill="#1E1C19" d="M30.70 30.70h71.63v10.23h-71.63zM122.79 30.70h10.23v10.23h-10.23zM153.49 30.70h20.47v10.23h-20.47zM184.19 30.70h20.47v10.23h-20.47zM214.88 30.70h10.23v10.23h-10.23zM245.58 30.70h10.23v10.23h-10.23zM276.28 30.70h10.23v10.23h-10.23zM306.98 30.70h20.47v10.23h-20.47zM337.67 30.70h71.63v10.23h-71.63zM30.70 40.93h10.23v10.23h-10.23zM92.09 40.93h10.23v10.23h-10.23zM122.79 40.93h10.23v10.23h-10.23zM153.49 40.93h10.23v10.23h-10.23zM173.95 40.93h10.23v10.23h-10.23zM204.65 40.93h30.70v10.23h-30.70zM255.81 40.93h30.70v10.23h-30.70zM296.74 40.93h20.47v10.23h-20.47zM337.67 40.93h10.23v10.23h-10.23zM399.07 40.93h10.23v10.23h-10.23zM30.70 51.16h10.23v10.23h-10.23zM51.16 51.16h30.70v10.23h-30.70zM92.09 51.16h10.23v10.23h-10.23zM122.79 51.16h20.47v10.23h-20.47zM173.95 51.16h10.23v10.23h-10.23zM204.65 51.16h40.93v10.23h-40.93zM266.05 51.16h20.47v10.23h-20.47zM337.67 51.16h10.23v10.23h-10.23zM358.14 51.16h30.70v10.23h-30.70zM399.07 51.16h10.23v10.23h-10.23zM30.70 61.40h10.23v10.23h-10.23zM51.16 61.40h30.70v10.23h-30.70zM92.09 61.40h10.23v10.23h-10.23zM133.02 61.40h10.23v10.23h-10.23zM153.49 61.40h30.70v10.23h-30.70zM194.42 61.40h10.23v10.23h-10.23zM235.35 61.40h10.23v10.23h-10.23zM255.81 61.40h20.47v10.23h-20.47zM296.74 61.40h30.70v10.23h-30.70zM337.67 61.40h10.23v10.23h-10.23zM358.14 61.40h30.70v10.23h-30.70zM399.07 61.40h10.23v10.23h-10.23zM30.70 71.63h10.23v10.23h-10.23zM51.16 71.63h30.70v10.23h-30.70zM92.09 71.63h10.23v10.23h-10.23zM133.02 71.63h20.47v10.23h-20.47zM163.72 71.63h10.23v10.23h-10.23zM184.19 71.63h10.23v10.23h-10.23zM235.35 71.63h20.47v10.23h-20.47zM266.05 71.63h10.23v10.23h-10.23zM286.51 71.63h40.93v10.23h-40.93zM337.67 71.63h10.23v10.23h-10.23zM358.14 71.63h30.70v10.23h-30.70zM399.07 71.63h10.23v10.23h-10.23zM30.70 81.86h10.23v10.23h-10.23zM92.09 81.86h10.23v10.23h-10.23zM112.56 81.86h20.47v10.23h-20.47zM163.72 81.86h20.47v10.23h-20.47zM225.12 81.86h10.23v10.23h-10.23zM255.81 81.86h10.23v10.23h-10.23zM276.28 81.86h51.16v10.23h-51.16zM337.67 81.86h10.23v10.23h-10.23zM399.07 81.86h10.23v10.23h-10.23zM30.70 92.09h71.63v10.23h-71.63zM112.56 92.09h10.23v10.23h-10.23zM133.02 92.09h10.23v10.23h-10.23zM153.49 92.09h10.23v10.23h-10.23zM173.95 92.09h10.23v10.23h-10.23zM194.42 92.09h10.23v10.23h-10.23zM214.88 92.09h10.23v10.23h-10.23zM235.35 92.09h10.23v10.23h-10.23zM255.81 92.09h10.23v10.23h-10.23zM276.28 92.09h10.23v10.23h-10.23zM296.74 92.09h10.23v10.23h-10.23zM317.21 92.09h10.23v10.23h-10.23zM337.67 92.09h71.63v10.23h-71.63zM133.02 102.33h10.23v10.23h-10.23zM153.49 102.33h30.70v10.23h-30.70zM204.65 102.33h40.93v10.23h-40.93zM255.81 102.33h10.23v10.23h-10.23zM276.28 102.33h10.23v10.23h-10.23zM296.74 102.33h30.70v10.23h-30.70zM30.70 112.56h10.23v10.23h-10.23zM61.40 112.56h10.23v10.23h-10.23zM81.86 112.56h20.47v10.23h-20.47zM112.56 112.56h10.23v10.23h-10.23zM133.02 112.56h20.47v10.23h-20.47zM173.95 112.56h71.63v10.23h-71.63zM276.28 112.56h20.47v10.23h-20.47zM306.98 112.56h10.23v10.23h-10.23zM327.44 112.56h10.23v10.23h-10.23zM347.91 112.56h10.23v10.23h-10.23zM40.93 122.79h10.23v10.23h-10.23zM71.63 122.79h10.23v10.23h-10.23zM122.79 122.79h40.93v10.23h-40.93zM173.95 122.79h61.40v10.23h-61.40zM245.58 122.79h10.23v10.23h-10.23zM266.05 122.79h20.47v10.23h-20.47zM296.74 122.79h10.23v10.23h-10.23zM337.67 122.79h20.47v10.23h-20.47zM368.37 122.79h10.23v10.23h-10.23zM399.07 122.79h10.23v10.23h-10.23zM30.70 133.02h30.70v10.23h-30.70zM81.86 133.02h30.70v10.23h-30.70zM143.26 133.02h10.23v10.23h-10.23zM184.19 133.02h10.23v10.23h-10.23zM225.12 133.02h10.23v10.23h-10.23zM266.05 133.02h40.93v10.23h-40.93zM317.21 133.02h30.70v10.23h-30.70zM358.14 133.02h20.47v10.23h-20.47zM388.84 133.02h20.47v10.23h-20.47zM30.70 143.26h10.23v10.23h-10.23zM61.40 143.26h20.47v10.23h-20.47zM112.56 143.26h10.23v10.23h-10.23zM153.49 143.26h30.70v10.23h-30.70zM194.42 143.26h10.23v10.23h-10.23zM225.12 143.26h92.09v10.23h-92.09zM327.44 143.26h30.70v10.23h-30.70zM368.37 143.26h10.23v10.23h-10.23zM30.70 153.49h40.93v10.23h-40.93zM81.86 153.49h20.47v10.23h-20.47zM112.56 153.49h10.23v10.23h-10.23zM143.26 153.49h10.23v10.23h-10.23zM163.72 153.49h30.70v10.23h-30.70zM204.65 153.49h20.47v10.23h-20.47zM235.35 153.49h20.47v10.23h-20.47zM266.05 153.49h30.70v10.23h-30.70zM317.21 153.49h30.70v10.23h-30.70zM368.37 153.49h10.23v10.23h-10.23zM388.84 153.49h20.47v10.23h-20.47zM30.70 163.72h10.23v10.23h-10.23zM51.16 163.72h30.70v10.23h-30.70zM122.79 163.72h10.23v10.23h-10.23zM143.26 163.72h10.23v10.23h-10.23zM163.72 163.72h10.23v10.23h-10.23zM194.42 163.72h10.23v10.23h-10.23zM214.88 163.72h20.47v10.23h-20.47zM245.58 163.72h10.23v10.23h-10.23zM286.51 163.72h20.47v10.23h-20.47zM327.44 163.72h30.70v10.23h-30.70zM378.60 163.72h10.23v10.23h-10.23zM399.07 163.72h10.23v10.23h-10.23zM40.93 173.95h10.23v10.23h-10.23zM61.40 173.95h51.16v10.23h-51.16zM143.26 173.95h40.93v10.23h-40.93zM235.35 173.95h10.23v10.23h-10.23zM255.81 173.95h20.47v10.23h-20.47zM327.44 173.95h10.23v10.23h-10.23zM347.91 173.95h20.47v10.23h-20.47zM378.60 173.95h30.70v10.23h-30.70zM30.70 184.19h20.47v10.23h-20.47zM71.63 184.19h10.23v10.23h-10.23zM102.33 184.19h20.47v10.23h-20.47zM133.02 184.19h10.23v10.23h-10.23zM153.49 184.19h10.23v10.23h-10.23zM184.19 184.19h20.47v10.23h-20.47zM225.12 184.19h10.23v10.23h-10.23zM245.58 184.19h61.40v10.23h-61.40zM317.21 184.19h20.47v10.23h-20.47zM358.14 184.19h10.23v10.23h-10.23zM30.70 194.42h30.70v10.23h-30.70zM81.86 194.42h20.47v10.23h-20.47zM122.79 194.42h10.23v10.23h-10.23zM143.26 194.42h20.47v10.23h-20.47zM173.95 194.42h10.23v10.23h-10.23zM194.42 194.42h10.23v10.23h-10.23zM235.35 194.42h10.23v10.23h-10.23zM266.05 194.42h20.47v10.23h-20.47zM317.21 194.42h10.23v10.23h-10.23zM337.67 194.42h10.23v10.23h-10.23zM368.37 194.42h20.47v10.23h-20.47zM30.70 204.65h10.23v10.23h-10.23zM71.63 204.65h20.47v10.23h-20.47zM112.56 204.65h20.47v10.23h-20.47zM153.49 204.65h40.93v10.23h-40.93zM225.12 204.65h10.23v10.23h-10.23zM245.58 204.65h20.47v10.23h-20.47zM286.51 204.65h20.47v10.23h-20.47zM327.44 204.65h40.93v10.23h-40.93zM388.84 204.65h20.47v10.23h-20.47zM40.93 214.88h10.23v10.23h-10.23zM81.86 214.88h40.93v10.23h-40.93zM133.02 214.88h10.23v10.23h-10.23zM173.95 214.88h10.23v10.23h-10.23zM204.65 214.88h61.40v10.23h-61.40zM276.28 214.88h10.23v10.23h-10.23zM347.91 214.88h20.47v10.23h-20.47zM378.60 214.88h30.70v10.23h-30.70zM40.93 225.12h30.70v10.23h-30.70zM81.86 225.12h10.23v10.23h-10.23zM102.33 225.12h71.63v10.23h-71.63zM184.19 225.12h30.70v10.23h-30.70zM225.12 225.12h40.93v10.23h-40.93zM276.28 225.12h10.23v10.23h-10.23zM296.74 225.12h30.70v10.23h-30.70zM347.91 225.12h10.23v10.23h-10.23zM368.37 225.12h30.70v10.23h-30.70zM40.93 235.35h10.23v10.23h-10.23zM61.40 235.35h81.86v10.23h-81.86zM163.72 235.35h10.23v10.23h-10.23zM225.12 235.35h30.70v10.23h-30.70zM266.05 235.35h40.93v10.23h-40.93zM317.21 235.35h10.23v10.23h-10.23zM337.67 235.35h10.23v10.23h-10.23zM358.14 235.35h20.47v10.23h-20.47zM388.84 235.35h10.23v10.23h-10.23zM30.70 245.58h20.47v10.23h-20.47zM102.33 245.58h10.23v10.23h-10.23zM122.79 245.58h40.93v10.23h-40.93zM204.65 245.58h10.23v10.23h-10.23zM235.35 245.58h10.23v10.23h-10.23zM255.81 245.58h10.23v10.23h-10.23zM276.28 245.58h20.47v10.23h-20.47zM317.21 245.58h10.23v10.23h-10.23zM337.67 245.58h20.47v10.23h-20.47zM368.37 245.58h10.23v10.23h-10.23zM399.07 245.58h10.23v10.23h-10.23zM30.70 255.81h20.47v10.23h-20.47zM92.09 255.81h20.47v10.23h-20.47zM122.79 255.81h10.23v10.23h-10.23zM153.49 255.81h20.47v10.23h-20.47zM214.88 255.81h51.16v10.23h-51.16zM286.51 255.81h10.23v10.23h-10.23zM399.07 255.81h10.23v10.23h-10.23zM51.16 266.05h20.47v10.23h-20.47zM102.33 266.05h10.23v10.23h-10.23zM122.79 266.05h61.40v10.23h-61.40zM194.42 266.05h10.23v10.23h-10.23zM214.88 266.05h30.70v10.23h-30.70zM266.05 266.05h40.93v10.23h-40.93zM317.21 266.05h20.47v10.23h-20.47zM388.84 266.05h10.23v10.23h-10.23zM30.70 276.28h20.47v10.23h-20.47zM61.40 276.28h81.86v10.23h-81.86zM153.49 276.28h10.23v10.23h-10.23zM173.95 276.28h10.23v10.23h-10.23zM194.42 276.28h10.23v10.23h-10.23zM214.88 276.28h20.47v10.23h-20.47zM266.05 276.28h30.70v10.23h-30.70zM306.98 276.28h10.23v10.23h-10.23zM337.67 276.28h10.23v10.23h-10.23zM368.37 276.28h10.23v10.23h-10.23zM388.84 276.28h20.47v10.23h-20.47zM40.93 286.51h20.47v10.23h-20.47zM112.56 286.51h10.23v10.23h-10.23zM133.02 286.51h20.47v10.23h-20.47zM163.72 286.51h10.23v10.23h-10.23zM184.19 286.51h10.23v10.23h-10.23zM204.65 286.51h20.47v10.23h-20.47zM245.58 286.51h20.47v10.23h-20.47zM276.28 286.51h10.23v10.23h-10.23zM317.21 286.51h10.23v10.23h-10.23zM337.67 286.51h20.47v10.23h-20.47zM368.37 286.51h10.23v10.23h-10.23zM388.84 286.51h20.47v10.23h-20.47zM30.70 296.74h10.23v10.23h-10.23zM71.63 296.74h10.23v10.23h-10.23zM92.09 296.74h10.23v10.23h-10.23zM122.79 296.74h30.70v10.23h-30.70zM184.19 296.74h40.93v10.23h-40.93zM235.35 296.74h10.23v10.23h-10.23zM255.81 296.74h40.93v10.23h-40.93zM327.44 296.74h40.93v10.23h-40.93zM378.60 296.74h10.23v10.23h-10.23zM399.07 296.74h10.23v10.23h-10.23zM40.93 306.98h10.23v10.23h-10.23zM71.63 306.98h20.47v10.23h-20.47zM112.56 306.98h10.23v10.23h-10.23zM143.26 306.98h20.47v10.23h-20.47zM173.95 306.98h10.23v10.23h-10.23zM194.42 306.98h40.93v10.23h-40.93zM245.58 306.98h10.23v10.23h-10.23zM266.05 306.98h30.70v10.23h-30.70zM337.67 306.98h20.47v10.23h-20.47zM368.37 306.98h10.23v10.23h-10.23zM30.70 317.21h51.16v10.23h-51.16zM92.09 317.21h20.47v10.23h-20.47zM122.79 317.21h10.23v10.23h-10.23zM143.26 317.21h20.47v10.23h-20.47zM173.95 317.21h20.47v10.23h-20.47zM204.65 317.21h61.40v10.23h-61.40zM276.28 317.21h10.23v10.23h-10.23zM296.74 317.21h10.23v10.23h-10.23zM317.21 317.21h71.63v10.23h-71.63zM399.07 317.21h10.23v10.23h-10.23zM112.56 327.44h20.47v10.23h-20.47zM143.26 327.44h10.23v10.23h-10.23zM173.95 327.44h10.23v10.23h-10.23zM194.42 327.44h30.70v10.23h-30.70zM245.58 327.44h10.23v10.23h-10.23zM266.05 327.44h61.40v10.23h-61.40zM358.14 327.44h20.47v10.23h-20.47zM388.84 327.44h20.47v10.23h-20.47zM30.70 337.67h71.63v10.23h-71.63zM122.79 337.67h10.23v10.23h-10.23zM143.26 337.67h20.47v10.23h-20.47zM173.95 337.67h10.23v10.23h-10.23zM194.42 337.67h20.47v10.23h-20.47zM235.35 337.67h10.23v10.23h-10.23zM255.81 337.67h10.23v10.23h-10.23zM306.98 337.67h20.47v10.23h-20.47zM337.67 337.67h10.23v10.23h-10.23zM358.14 337.67h20.47v10.23h-20.47zM399.07 337.67h10.23v10.23h-10.23zM30.70 347.91h10.23v10.23h-10.23zM92.09 347.91h10.23v10.23h-10.23zM112.56 347.91h10.23v10.23h-10.23zM133.02 347.91h20.47v10.23h-20.47zM163.72 347.91h10.23v10.23h-10.23zM194.42 347.91h10.23v10.23h-10.23zM235.35 347.91h20.47v10.23h-20.47zM296.74 347.91h30.70v10.23h-30.70zM358.14 347.91h30.70v10.23h-30.70zM30.70 358.14h10.23v10.23h-10.23zM51.16 358.14h30.70v10.23h-30.70zM92.09 358.14h10.23v10.23h-10.23zM122.79 358.14h20.47v10.23h-20.47zM153.49 358.14h20.47v10.23h-20.47zM204.65 358.14h10.23v10.23h-10.23zM255.81 358.14h20.47v10.23h-20.47zM286.51 358.14h10.23v10.23h-10.23zM317.21 358.14h61.40v10.23h-61.40zM399.07 358.14h10.23v10.23h-10.23zM30.70 368.37h10.23v10.23h-10.23zM51.16 368.37h30.70v10.23h-30.70zM92.09 368.37h10.23v10.23h-10.23zM112.56 368.37h20.47v10.23h-20.47zM153.49 368.37h10.23v10.23h-10.23zM173.95 368.37h20.47v10.23h-20.47zM204.65 368.37h10.23v10.23h-10.23zM225.12 368.37h40.93v10.23h-40.93zM296.74 368.37h20.47v10.23h-20.47zM347.91 368.37h51.16v10.23h-51.16zM30.70 378.60h10.23v10.23h-10.23zM51.16 378.60h30.70v10.23h-30.70zM92.09 378.60h10.23v10.23h-10.23zM122.79 378.60h10.23v10.23h-10.23zM143.26 378.60h20.47v10.23h-20.47zM173.95 378.60h10.23v10.23h-10.23zM194.42 378.60h20.47v10.23h-20.47zM235.35 378.60h10.23v10.23h-10.23zM306.98 378.60h10.23v10.23h-10.23zM327.44 378.60h10.23v10.23h-10.23zM347.91 378.60h30.70v10.23h-30.70zM388.84 378.60h20.47v10.23h-20.47zM30.70 388.84h10.23v10.23h-10.23zM92.09 388.84h10.23v10.23h-10.23zM122.79 388.84h30.70v10.23h-30.70zM173.95 388.84h20.47v10.23h-20.47zM245.58 388.84h20.47v10.23h-20.47zM286.51 388.84h40.93v10.23h-40.93zM347.91 388.84h10.23v10.23h-10.23zM368.37 388.84h10.23v10.23h-10.23zM30.70 399.07h71.63v10.23h-71.63zM112.56 399.07h20.47v10.23h-20.47zM143.26 399.07h20.47v10.23h-20.47zM173.95 399.07h10.23v10.23h-10.23zM194.42 399.07h20.47v10.23h-20.47zM225.12 399.07h10.23v10.23h-10.23zM245.58 399.07h10.23v10.23h-10.23zM266.05 399.07h30.70v10.23h-30.70zM306.98 399.07h40.93v10.23h-40.93zM368.37 399.07h10.23v10.23h-10.23zM388.84 399.07h20.47v10.23h-20.47z"/></svg></div></div>
+</div>
+
+</section>
+<section id="anymodel" class="alt top" data-transition="fade">
+<h2 class="serif rise">One memory. <i class="clayc">Any model.</i></h2>
+<div class="diagram rise" style="--i:2">
+<p class="chip" style="top:0px">Claude</p>
+<p class="chip" style="top:228px">ChatGPT</p>
+<p class="chip" style="top:456px">Next model</p>
+<div class="card"><p>memory.md</p><div class="bar" style="width:240px"></div><div class="bar" style="width:200px"></div><div class="bar" style="width:260px"></div><div class="bar" style="width:160px"></div></div>
+<p class="chip you" style="top:228px">You</p>
+<svg style="position:absolute;left:0;top:0;overflow:visible" width="1" height="1"><path d="M420 52 L680 220 M662.0488189185464 218.67519896555575 L680 220 L671.4157170997624 204.1788089231977 M437.9511810814535 53.32480103444424 L420 52 L428.58428290023755 67.82119107680231" fill="none" stroke="#8A8175" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg style="position:absolute;left:0;top:0;overflow:visible" width="1" height="1"><path d="M420 280 L680 280 M664.2035138859733 288.62965969487567 L680 280 L664.2035138859733 271.37034030512433 M435.7964861140267 271.37034030512433 L420 280 L435.7964861140267 288.62965969487567" fill="none" stroke="#8A8175" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg style="position:absolute;left:0;top:0;overflow:visible" width="1" height="1"><path d="M420 508 L680 340 M671.4157170997624 355.82119107680234 L680 340 L662.0488189185464 341.32480103444425 M428.58428290023755 492.17880892319766 L420 508 L437.9511810814535 506.67519896555575" fill="none" stroke="#8A8175" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg style="position:absolute;left:0;top:0;overflow:visible" width="1" height="1"><path d="M1040 280 L1300 280 M1284.2035138859733 288.62965969487567 L1300 280 L1284.2035138859733 271.37034030512433 M1055.7964861140267 271.37034030512433 L1040 280 L1055.7964861140267 288.62965969487567" fill="none" stroke="#8A8175" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div>
+
+</section>
+<section id="broke" class="" data-transition="fade">
+<div class="bubbles">
+<div class="bubble warn pop" style="--i:0"><svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#B8532E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p>Duplicates.</p></div>
+<div class="bubble warn pop" style="--i:2"><svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#B8532E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p>Guesses saved as facts.</p></div>
+<div class="bubble warn pop" style="--i:4"><svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#B8532E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p>Silent overwrites.</p></div>
+</div>
+
+</section>
+<section id="rules" class="alt" data-transition="fade">
+<div class="bubbles">
+<p class="bubble me pop" style="--i:0">Fable 5.2, review my memory system.</p>
+<p class="bubble pop" style="--i:3">Fixing duplicates, guesses, overwrites…</p>
+</div>
+
+</section>
+<section id="stats" class="" data-transition="fade">
+<div class="split">
+<div class="tree rise" style="--i:0">
+<div class="trow"><p class="tname">profile/</p><p class="tnum">194</p></div>
+<div class="trow"><p class="tname">projects/</p><p class="tnum">23</p></div>
+<div class="trow"><p class="tname">entities/</p></div>
+<div class="tsub">
+<div class="trow"><p class="tname">people/</p><p class="tnum">104</p></div>
+<div class="trow"><p class="tname">companies/</p><p class="tnum">51</p></div>
+<div class="trow"><p class="tname">organizations/</p><p class="tnum">21</p></div>
+</div>
+<div class="trow"><p class="tname">conversations/</p><p class="tnum">67</p></div>
+</div>
+<div class="stat rise" style="--i:3"><p class="num clayc">0</p><p class="lbl">hallucinations in two months</p></div>
+</div>
+
+</section>
+<section id="close" class="alt" data-transition="fade">
+<div class="split">
+<div class="stack">
+<div class="bubbles"><p class="bubble pop">Welcome back, Huseyn.</p></div>
+<h2 class="serif rise" style="--i:2">Own your AI’s <i class="clayc">memory.</i></h2>
+</div>
+<div class="qrcol pop" style="--i:3"><div class="qr"><svg aria-label="QR code: Huseyn Guliyev on LinkedIn" width="440" height="440" viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg"><rect width="440" height="440" rx="24" fill="#FBF8F2"/><path fill="#1E1C19" d="M33.85 33.85h78.97v11.28h-78.97zM236.92 33.85h11.28v11.28h-11.28zM270.77 33.85h22.56v11.28h-22.56zM327.18 33.85h78.97v11.28h-78.97zM33.85 45.13h11.28v11.28h-11.28zM101.54 45.13h11.28v11.28h-11.28zM124.10 45.13h22.56v11.28h-22.56zM157.95 45.13h45.13v11.28h-45.13zM225.64 45.13h11.28v11.28h-11.28zM270.77 45.13h11.28v11.28h-11.28zM304.62 45.13h11.28v11.28h-11.28zM327.18 45.13h11.28v11.28h-11.28zM394.87 45.13h11.28v11.28h-11.28zM33.85 56.41h11.28v11.28h-11.28zM56.41 56.41h33.85v11.28h-33.85zM101.54 56.41h11.28v11.28h-11.28zM124.10 56.41h11.28v11.28h-11.28zM146.67 56.41h11.28v11.28h-11.28zM180.51 56.41h11.28v11.28h-11.28zM203.08 56.41h11.28v11.28h-11.28zM225.64 56.41h67.69v11.28h-67.69zM327.18 56.41h11.28v11.28h-11.28zM349.74 56.41h33.85v11.28h-33.85zM394.87 56.41h11.28v11.28h-11.28zM33.85 67.69h11.28v11.28h-11.28zM56.41 67.69h33.85v11.28h-33.85zM101.54 67.69h11.28v11.28h-11.28zM124.10 67.69h33.85v11.28h-33.85zM169.23 67.69h11.28v11.28h-11.28zM203.08 67.69h11.28v11.28h-11.28zM248.21 67.69h11.28v11.28h-11.28zM270.77 67.69h33.85v11.28h-33.85zM327.18 67.69h11.28v11.28h-11.28zM349.74 67.69h33.85v11.28h-33.85zM394.87 67.69h11.28v11.28h-11.28zM33.85 78.97h11.28v11.28h-11.28zM56.41 78.97h33.85v11.28h-33.85zM101.54 78.97h11.28v11.28h-11.28zM135.38 78.97h11.28v11.28h-11.28zM157.95 78.97h22.56v11.28h-22.56zM203.08 78.97h11.28v11.28h-11.28zM236.92 78.97h11.28v11.28h-11.28zM293.33 78.97h22.56v11.28h-22.56zM327.18 78.97h11.28v11.28h-11.28zM349.74 78.97h33.85v11.28h-33.85zM394.87 78.97h11.28v11.28h-11.28zM33.85 90.26h11.28v11.28h-11.28zM101.54 90.26h11.28v11.28h-11.28zM169.23 90.26h11.28v11.28h-11.28zM191.79 90.26h11.28v11.28h-11.28zM214.36 90.26h33.85v11.28h-33.85zM259.49 90.26h11.28v11.28h-11.28zM327.18 90.26h11.28v11.28h-11.28zM394.87 90.26h11.28v11.28h-11.28zM33.85 101.54h78.97v11.28h-78.97zM124.10 101.54h11.28v11.28h-11.28zM146.67 101.54h11.28v11.28h-11.28zM169.23 101.54h11.28v11.28h-11.28zM191.79 101.54h11.28v11.28h-11.28zM214.36 101.54h11.28v11.28h-11.28zM236.92 101.54h11.28v11.28h-11.28zM259.49 101.54h11.28v11.28h-11.28zM282.05 101.54h11.28v11.28h-11.28zM304.62 101.54h11.28v11.28h-11.28zM327.18 101.54h78.97v11.28h-78.97zM124.10 112.82h45.13v11.28h-45.13zM191.79 112.82h11.28v11.28h-11.28zM282.05 112.82h11.28v11.28h-11.28zM304.62 112.82h11.28v11.28h-11.28zM33.85 124.10h11.28v11.28h-11.28zM101.54 124.10h11.28v11.28h-11.28zM124.10 124.10h11.28v11.28h-11.28zM146.67 124.10h11.28v11.28h-11.28zM169.23 124.10h45.13v11.28h-45.13zM225.64 124.10h11.28v11.28h-11.28zM282.05 124.10h11.28v11.28h-11.28zM304.62 124.10h33.85v11.28h-33.85zM361.03 124.10h33.85v11.28h-33.85zM33.85 135.38h56.41v11.28h-56.41zM112.82 135.38h11.28v11.28h-11.28zM135.38 135.38h33.85v11.28h-33.85zM203.08 135.38h11.28v11.28h-11.28zM236.92 135.38h67.69v11.28h-67.69zM349.74 135.38h33.85v11.28h-33.85zM56.41 146.67h11.28v11.28h-11.28zM90.26 146.67h22.56v11.28h-22.56zM124.10 146.67h11.28v11.28h-11.28zM157.95 146.67h22.56v11.28h-22.56zM203.08 146.67h22.56v11.28h-22.56zM236.92 146.67h11.28v11.28h-11.28zM282.05 146.67h11.28v11.28h-11.28zM304.62 146.67h11.28v11.28h-11.28zM327.18 146.67h11.28v11.28h-11.28zM349.74 146.67h11.28v11.28h-11.28zM372.31 146.67h22.56v11.28h-22.56zM56.41 157.95h45.13v11.28h-45.13zM124.10 157.95h33.85v11.28h-33.85zM191.79 157.95h33.85v11.28h-33.85zM248.21 157.95h22.56v11.28h-22.56zM282.05 157.95h22.56v11.28h-22.56zM315.90 157.95h11.28v11.28h-11.28zM338.46 157.95h56.41v11.28h-56.41zM33.85 169.23h11.28v11.28h-11.28zM56.41 169.23h33.85v11.28h-33.85zM101.54 169.23h22.56v11.28h-22.56zM135.38 169.23h11.28v11.28h-11.28zM169.23 169.23h33.85v11.28h-33.85zM214.36 169.23h33.85v11.28h-33.85zM259.49 169.23h33.85v11.28h-33.85zM327.18 169.23h22.56v11.28h-22.56zM383.59 169.23h11.28v11.28h-11.28zM33.85 180.51h22.56v11.28h-22.56zM67.69 180.51h22.56v11.28h-22.56zM112.82 180.51h22.56v11.28h-22.56zM157.95 180.51h11.28v11.28h-11.28zM180.51 180.51h22.56v11.28h-22.56zM214.36 180.51h22.56v11.28h-22.56zM259.49 180.51h22.56v11.28h-22.56zM293.33 180.51h56.41v11.28h-56.41zM361.03 180.51h11.28v11.28h-11.28zM383.59 180.51h22.56v11.28h-22.56zM33.85 191.79h22.56v11.28h-22.56zM67.69 191.79h11.28v11.28h-11.28zM101.54 191.79h33.85v11.28h-33.85zM146.67 191.79h22.56v11.28h-22.56zM180.51 191.79h22.56v11.28h-22.56zM225.64 191.79h11.28v11.28h-11.28zM248.21 191.79h11.28v11.28h-11.28zM282.05 191.79h11.28v11.28h-11.28zM304.62 191.79h45.13v11.28h-45.13zM383.59 191.79h11.28v11.28h-11.28zM45.13 203.08h56.41v11.28h-56.41zM112.82 203.08h11.28v11.28h-11.28zM146.67 203.08h22.56v11.28h-22.56zM203.08 203.08h11.28v11.28h-11.28zM248.21 203.08h11.28v11.28h-11.28zM282.05 203.08h11.28v11.28h-11.28zM304.62 203.08h22.56v11.28h-22.56zM338.46 203.08h11.28v11.28h-11.28zM372.31 203.08h11.28v11.28h-11.28zM394.87 203.08h11.28v11.28h-11.28zM33.85 214.36h45.13v11.28h-45.13zM90.26 214.36h22.56v11.28h-22.56zM135.38 214.36h11.28v11.28h-11.28zM169.23 214.36h22.56v11.28h-22.56zM225.64 214.36h11.28v11.28h-11.28zM248.21 214.36h11.28v11.28h-11.28zM282.05 214.36h11.28v11.28h-11.28zM304.62 214.36h22.56v11.28h-22.56zM338.46 214.36h22.56v11.28h-22.56zM394.87 214.36h11.28v11.28h-11.28zM33.85 225.64h22.56v11.28h-22.56zM67.69 225.64h33.85v11.28h-33.85zM112.82 225.64h11.28v11.28h-11.28zM135.38 225.64h45.13v11.28h-45.13zM191.79 225.64h22.56v11.28h-22.56zM225.64 225.64h56.41v11.28h-56.41zM293.33 225.64h45.13v11.28h-45.13zM361.03 225.64h45.13v11.28h-45.13zM45.13 236.92h22.56v11.28h-22.56zM78.97 236.92h45.13v11.28h-45.13zM135.38 236.92h22.56v11.28h-22.56zM169.23 236.92h11.28v11.28h-11.28zM191.79 236.92h33.85v11.28h-33.85zM248.21 236.92h11.28v11.28h-11.28zM293.33 236.92h11.28v11.28h-11.28zM315.90 236.92h11.28v11.28h-11.28zM338.46 236.92h11.28v11.28h-11.28zM361.03 236.92h22.56v11.28h-22.56zM394.87 236.92h11.28v11.28h-11.28zM33.85 248.21h22.56v11.28h-22.56zM78.97 248.21h11.28v11.28h-11.28zM180.51 248.21h11.28v11.28h-11.28zM203.08 248.21h45.13v11.28h-45.13zM270.77 248.21h11.28v11.28h-11.28zM293.33 248.21h11.28v11.28h-11.28zM315.90 248.21h11.28v11.28h-11.28zM349.74 248.21h45.13v11.28h-45.13zM33.85 259.49h11.28v11.28h-11.28zM56.41 259.49h56.41v11.28h-56.41zM146.67 259.49h22.56v11.28h-22.56zM180.51 259.49h22.56v11.28h-22.56zM214.36 259.49h11.28v11.28h-11.28zM248.21 259.49h45.13v11.28h-45.13zM315.90 259.49h11.28v11.28h-11.28zM338.46 259.49h33.85v11.28h-33.85zM383.59 259.49h11.28v11.28h-11.28zM33.85 270.77h11.28v11.28h-11.28zM56.41 270.77h11.28v11.28h-11.28zM90.26 270.77h11.28v11.28h-11.28zM112.82 270.77h45.13v11.28h-45.13zM191.79 270.77h11.28v11.28h-11.28zM214.36 270.77h33.85v11.28h-33.85zM259.49 270.77h56.41v11.28h-56.41zM338.46 270.77h33.85v11.28h-33.85zM33.85 282.05h11.28v11.28h-11.28zM90.26 282.05h45.13v11.28h-45.13zM146.67 282.05h11.28v11.28h-11.28zM169.23 282.05h22.56v11.28h-22.56zM203.08 282.05h22.56v11.28h-22.56zM259.49 282.05h11.28v11.28h-11.28zM304.62 282.05h22.56v11.28h-22.56zM361.03 282.05h33.85v11.28h-33.85zM33.85 293.33h11.28v11.28h-11.28zM56.41 293.33h33.85v11.28h-33.85zM124.10 293.33h11.28v11.28h-11.28zM146.67 293.33h33.85v11.28h-33.85zM282.05 293.33h22.56v11.28h-22.56zM315.90 293.33h33.85v11.28h-33.85zM361.03 293.33h22.56v11.28h-22.56zM394.87 293.33h11.28v11.28h-11.28zM33.85 304.62h22.56v11.28h-22.56zM67.69 304.62h67.69v11.28h-67.69zM146.67 304.62h11.28v11.28h-11.28zM169.23 304.62h11.28v11.28h-11.28zM203.08 304.62h22.56v11.28h-22.56zM236.92 304.62h33.85v11.28h-33.85zM293.33 304.62h78.97v11.28h-78.97zM124.10 315.90h22.56v11.28h-22.56zM180.51 315.90h45.13v11.28h-45.13zM236.92 315.90h33.85v11.28h-33.85zM293.33 315.90h22.56v11.28h-22.56zM349.74 315.90h11.28v11.28h-11.28zM372.31 315.90h11.28v11.28h-11.28zM394.87 315.90h11.28v11.28h-11.28zM33.85 327.18h78.97v11.28h-78.97zM135.38 327.18h45.13v11.28h-45.13zM203.08 327.18h22.56v11.28h-22.56zM236.92 327.18h11.28v11.28h-11.28zM270.77 327.18h11.28v11.28h-11.28zM293.33 327.18h22.56v11.28h-22.56zM327.18 327.18h11.28v11.28h-11.28zM349.74 327.18h11.28v11.28h-11.28zM372.31 327.18h22.56v11.28h-22.56zM33.85 338.46h11.28v11.28h-11.28zM101.54 338.46h11.28v11.28h-11.28zM157.95 338.46h33.85v11.28h-33.85zM214.36 338.46h11.28v11.28h-11.28zM293.33 338.46h22.56v11.28h-22.56zM349.74 338.46h45.13v11.28h-45.13zM33.85 349.74h11.28v11.28h-11.28zM56.41 349.74h33.85v11.28h-33.85zM101.54 349.74h11.28v11.28h-11.28zM135.38 349.74h11.28v11.28h-11.28zM169.23 349.74h22.56v11.28h-22.56zM236.92 349.74h11.28v11.28h-11.28zM270.77 349.74h11.28v11.28h-11.28zM304.62 349.74h67.69v11.28h-67.69zM33.85 361.03h11.28v11.28h-11.28zM56.41 361.03h33.85v11.28h-33.85zM101.54 361.03h11.28v11.28h-11.28zM135.38 361.03h11.28v11.28h-11.28zM169.23 361.03h11.28v11.28h-11.28zM191.79 361.03h11.28v11.28h-11.28zM214.36 361.03h22.56v11.28h-22.56zM259.49 361.03h11.28v11.28h-11.28zM282.05 361.03h22.56v11.28h-22.56zM315.90 361.03h11.28v11.28h-11.28zM338.46 361.03h45.13v11.28h-45.13zM394.87 361.03h11.28v11.28h-11.28zM33.85 372.31h11.28v11.28h-11.28zM56.41 372.31h33.85v11.28h-33.85zM101.54 372.31h11.28v11.28h-11.28zM135.38 372.31h11.28v11.28h-11.28zM157.95 372.31h33.85v11.28h-33.85zM214.36 372.31h11.28v11.28h-11.28zM259.49 372.31h22.56v11.28h-22.56zM304.62 372.31h11.28v11.28h-11.28zM338.46 372.31h22.56v11.28h-22.56zM383.59 372.31h22.56v11.28h-22.56zM33.85 383.59h11.28v11.28h-11.28zM101.54 383.59h11.28v11.28h-11.28zM203.08 383.59h22.56v11.28h-22.56zM248.21 383.59h22.56v11.28h-22.56zM282.05 383.59h22.56v11.28h-22.56zM315.90 383.59h11.28v11.28h-11.28zM338.46 383.59h45.13v11.28h-45.13zM33.85 394.87h78.97v11.28h-78.97zM124.10 394.87h11.28v11.28h-11.28zM146.67 394.87h11.28v11.28h-11.28zM191.79 394.87h11.28v11.28h-11.28zM225.64 394.87h11.28v11.28h-11.28zM248.21 394.87h11.28v11.28h-11.28zM282.05 394.87h45.13v11.28h-45.13zM338.46 394.87h11.28v11.28h-11.28zM361.03 394.87h11.28v11.28h-11.28zM383.59 394.87h11.28v11.28h-11.28z"/></svg></div><p class="url">Want my skill.md?</p></div>
+</div>
+
+</section>
+</div></div>
+<p id="rotate">Turn your phone sideways</p>
+<div id="ui"><span id="livepill" class="pill"><span class="dot"></span><span id="livetext">Connecting…</span></span><button id="back" class="pill" hidden>Back to live</button></div>
+<div id="remote">
+  <div id="preview"></div>
+  <div id="count"></div>
+  <div class="btns"><button id="prev" aria-label="Previous slide">Back</button><button id="next" aria-label="Next slide">Next</button></div>
+  <div id="status"></div>
+</div>
+<script>
+(() => {
+const TOPIC = "amnesia-d5e86e501f22c8ee38ec9275";
+const PUB = {"kty": "EC", "crv": "P-256", "x": "hWjJUf7anbqD-yVF9_67yQdZg-MFnVcS8upHVaITiaI", "y": "VQOeZkruHAxAgmFP89V2aQqpNU2CvxiJ_1Od4_S-_WY"};
+const BASE = 'https://ntfy.sh/' + TOPIC;
+const deck = document.getElementById('deck');
+const slides = [...deck.children];
+const N = slides.length;
+let current = 0, liveSlide = 0, lastTs = 0, following = true;
+
+function show(i) {
+  i = Math.max(0, Math.min(N - 1, i));
+  slides.forEach((s, k) => s.classList.toggle('on', k === i));
+  current = i;
+  document.getElementById('back').hidden = following || current === liveSlide;
+}
+function fit() {
+  const host = document.body.classList.contains('presenter') ? document.getElementById('preview') : document.getElementById('stage');
+  if (host.id === 'preview' && deck.parentElement !== host) host.appendChild(deck);
+  const r = host.getBoundingClientRect();
+  const k = Math.min(r.width / 1920, r.height / 1080);
+  deck.style.transform = 'scale(' + k + ')';
+  if (host.id === 'preview') { deck.style.position = 'absolute'; deck.style.left = (r.width - 1920) / 2 + 'px'; deck.style.top = (r.height - 1080) / 2 + 'px'; }
+}
+addEventListener('resize', fit);
+
+const b64u = b => btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const unb64u = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+const enc = new TextEncoder();
+let pubKey;
+async function verify(msg) {
+  try {
+    const m = JSON.parse(msg);
+    if (typeof m.s !== 'number' || typeof m.t !== 'number' || typeof m.sig !== 'string') return null;
+    pubKey = pubKey || await crypto.subtle.importKey('jwk', PUB, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
+    const ok = await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, pubKey, unb64u(m.sig), enc.encode(m.s + '|' + m.t));
+    return ok ? m : null;
+  } catch (e) { return null; }
+}
+async function receive(text) {
+  const m = await verify(text);
+  if (!m || m.t <= lastTs || m.s < 0 || m.s >= N) return;
+  lastTs = m.t; liveSlide = m.s;
+  setLive(true);
+  if (following) show(liveSlide); else document.getElementById('back').hidden = current === liveSlide;
+}
+function setLive(on) {
+  document.getElementById('livepill').classList.toggle('live', on);
+  document.getElementById('livetext').textContent = on ? 'Live' : 'Reconnecting…';
+}
+async function catchUp() {
+  try {
+    const r = await fetch(BASE + '/json?poll=1&since=12h', { cache: 'no-store' });
+    const lines = (await r.text()).trim().split('\n').filter(Boolean);
+    for (const l of lines) { const e = JSON.parse(l); if (e.event === 'message') await receive(e.message); }
+    setLive(true);
+  } catch (e) { setLive(false); }
+}
+function listen() {
+  let es;
+  try { es = new EventSource(BASE + '/sse'); } catch (e) { return; }
+  es.onmessage = ev => { try { const e = JSON.parse(ev.data); if (e.event === 'message') receive(e.message); } catch (_) {} };
+  es.onopen = () => setLive(true);
+  es.onerror = () => setLive(false);
+}
+
+// viewer browsing
+function browse(d) { following = false; show(current + d); }
+document.getElementById('back').onclick = () => { following = true; show(liveSlide); };
+let sx = null;
+addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+addEventListener('touchend', e => {
+  if (sx === null || document.body.classList.contains('presenter')) return;
+  const dx = e.changedTouches[0].clientX - sx; sx = null;
+  if (Math.abs(dx) > 50) browse(dx < 0 ? 1 : -1);
+});
+
+// presenter
+async function presenter(jwkB64) {
+  document.body.classList.add('presenter');
+  let prv;
+  try { prv = await crypto.subtle.importKey('jwk', JSON.parse(new TextDecoder().decode(unb64u(jwkB64))), { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']); }
+  catch (e) { document.getElementById('status').textContent = 'Presenter key not recognised'; return; }
+  const status = document.getElementById('status'), count = document.getElementById('count');
+  async function go(i) {
+    i = Math.max(0, Math.min(N - 1, i));
+    following = true; liveSlide = i; show(i); count.textContent = (i + 1) + ' / ' + N;
+    const t = Date.now(); lastTs = t;
+    const sig = b64u(await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, prv, enc.encode(i + '|' + t)));
+    status.textContent = 'Sending…';
+    for (let a = 0; a < 3; a++) {
+      try { const r = await fetch(BASE, { method: 'POST', body: JSON.stringify({ s: i, t, sig }) }); if (r.ok) { status.textContent = 'Sent to audience'; return; } } catch (e) {}
+      await new Promise(r => setTimeout(r, 700));
+    }
+    status.textContent = 'Not sent: check your connection';
+  }
+  document.getElementById('next').onclick = () => go(current + 1);
+  document.getElementById('prev').onclick = () => go(current - 1);
+  addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === ' ') go(current + 1); if (e.key === 'ArrowLeft') go(current - 1); });
+  try { await navigator.wakeLock?.request('screen'); } catch (e) {}
+  await catchUp(); fit(); go(liveSlide);
+}
+
+addEventListener('keydown', e => {
+  if (document.body.classList.contains('presenter')) return;
+  if (e.key === 'ArrowRight') browse(1); if (e.key === 'ArrowLeft') browse(-1);
+});
+
+show(0); fit();
+const m = location.hash.match(/present=([A-Za-z0-9_-]+)/);
+if (m) presenter(m[1]); else { catchUp(); listen(); setInterval(() => { if (!document.getElementById('livepill').classList.contains('live')) catchUp(); }, 5000); }
+})();
+</script>
+</body>
+</html>
